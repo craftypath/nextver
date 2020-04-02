@@ -15,7 +15,7 @@ func Next(current string, patternNext string) (string, error) {
     if err != nil {
         return "", err
     }
-    // check if patternNext was a valid semver version if "x"s were numbers
+
     versionNext, err := semver.StrictNewVersion(strings.ReplaceAll(patternNext, "x", "0"))
     if err != nil {
         return "", err
