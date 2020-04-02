@@ -7,7 +7,7 @@ import (
 )
 
 func Build() error {
-    return sh.RunV("go", "build", "-o", "build/verit", "cmd/verit.go")
+    return sh.RunV("go", "build", "-o", "build/verit", "main.go")
 }
 
 func Test() error {
