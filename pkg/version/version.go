@@ -70,10 +70,10 @@ func splitVersionExtension(version string) (string, string) {
     return versionCore, versionExtension
 }
 
-func findX(patternNextCore string) (int, error) {
+func findX(version string) (int, error) {
     positionX := -1
     var countX int
-    for i, s := range strings.Split(patternNextCore, ".") {
+    for i, s := range strings.Split(version, ".") {
         if s == "x" {
             positionX = i
             countX++
