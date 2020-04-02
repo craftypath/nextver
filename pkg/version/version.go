@@ -44,7 +44,7 @@ func Next(current string, patternNext string) (string, error) {
     return fmt.Sprintf("%v.%v.%v%v", nextMajor, nextMinor, nextPatch, nextExtension), err
 }
 
-func components(version string) (uint, uint, uint, string, error) {
+func components(version string) (int, int, int, string, error) {
     core, extension := getCoreAndExtension(version)
     core = strings.ReplaceAll(core, "x", "0")
     split := strings.Split(core, ".")
@@ -63,10 +63,7 @@ func components(version string) (uint, uint, uint, string, error) {
     if err != nil {
         return 0, 0, 0, "", err
     }
-    if major < 0 || minor < 0 || patch < 0 {
-        return 0, 0, 0, "", fmt.Errorf("version must only contain positive numbers got %v", version)
-    }
-    return uint(major), uint(minor), uint(patch), extension, nil
+    return major, minor, patch, extension, nil
 }
 
 // returns 0 if major is x

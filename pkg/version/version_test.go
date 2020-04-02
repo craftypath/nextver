@@ -186,6 +186,33 @@ func TestNext(t *testing.T) {
             want:    "0.0.0+build.x",
             wantErr: false,
         },
+        {
+            name: "major neither a number nor x",
+            args: args{
+                current:          "0.0.0",
+                incrementPattern: "y.0.0",
+            },
+            want:    "",
+            wantErr: true,
+        },
+        {
+            name: "minor neither a number nor x",
+            args: args{
+                current:          "0.0.0",
+                incrementPattern: "0.y.0",
+            },
+            want:    "",
+            wantErr: true,
+        },
+        {
+            name: "patch neither a number nor x",
+            args: args{
+                current:          "0.0.0",
+                incrementPattern: "0.0.y",
+            },
+            want:    "",
+            wantErr: true,
+        },
     }
     for _, tt := range tests {
         t.Run(tt.name, func(t *testing.T) {
