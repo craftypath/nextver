@@ -29,19 +29,6 @@ func Next(current string, patternNext string) (string, error) {
         patternNextExtension = patternNext[indexExtension:]
     }
 
-    // ensure there is at most one x and determine its position
-    positionX := -1
-    var countX int
-    for i, s := range strings.Split(patternNextCore, ".") {
-        if s == "x" {
-            positionX = i
-            countX++
-        }
-        if countX > 1 {
-            return "", fmt.Errorf("only one x allowed")
-        }
-    }
-
     // set and maybe increment new version
     nextMajor := versionNext.Major()
     nextMinor := versionNext.Minor()
@@ -50,6 +37,11 @@ func Next(current string, patternNext string) (string, error) {
     currentMajor := currentVersion.Major()
     currentMinor := currentVersion.Minor()
     currentPatch := currentVersion.Patch()
+
+    positionX, err := findX(patternNextCore)
+    if err != nil {
+        return "", err
+    }
 
     switch positionX {
     case positionMajor:
@@ -65,10 +57,26 @@ func Next(current string, patternNext string) (string, error) {
             nextPatch = currentPatch + 1
         }
     }
+
     var result string
     nextVersion, err := semver.StrictNewVersion(fmt.Sprintf("%v.%v.%v%v", nextMajor, nextMinor, nextPatch, patternNextExtension))
     if err == nil {
         result = nextVersion.String()
     }
     return result, err
+}
+
+func findX(patternNextCore string) (int, error) {
+    positionX := -1
+    var countX int
+    for i, s := range strings.Split(patternNextCore, ".") {
+        if s == "x" {
+            positionX = i
+            countX++
+        }
+        if countX > 1 {
+            return 0, fmt.Errorf("only one x allowed")
+        }
+    }
+    return positionX, nil
 }
