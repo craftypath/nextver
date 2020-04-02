@@ -41,7 +41,7 @@ func Next(current string, patternNext string) (string, error) {
         }
     }
 
-    return fmt.Sprintf("%v.%v.%v%v", nextMajor, nextMinor, nextPatch, nextExtension), err
+    return fmt.Sprintf("%v.%v.%v%v", nextMajor, nextMinor, nextPatch, nextExtension), nil
 }
 
 func components(version string) (int, int, int, string, error) {
