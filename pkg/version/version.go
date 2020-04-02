@@ -47,18 +47,22 @@ func Next(current string, patternNext string) (string, error) {
     nextMinor := versionNext.Minor()
     nextPatch := versionNext.Patch()
 
+    currentMajor := currentVersion.Major()
+    currentMinor := currentVersion.Minor()
+    currentPatch := currentVersion.Patch()
+
     switch positionX {
     case positionMajor:
-        if currentVersion.Minor() == versionNext.Minor() && currentVersion.Patch() == versionNext.Patch() {
-            nextMajor = currentVersion.Major() + 1
+        if currentMinor == nextMinor && currentPatch == nextPatch {
+            nextMajor = currentMajor + 1
         }
     case positionMinor:
-        if currentVersion.Major() == versionNext.Major() && currentVersion.Patch() == versionNext.Patch() {
-            nextMinor = currentVersion.Minor() + 1
+        if currentMajor == nextMajor && currentPatch == nextPatch {
+            nextMinor = currentMinor + 1
         }
     case positionPatch:
-        if currentVersion.Major() == versionNext.Major() && currentVersion.Minor() == versionNext.Minor() {
-            nextPatch = currentVersion.Patch() + 1
+        if currentMajor == nextMajor && currentMinor == nextMinor {
+            nextPatch = currentPatch + 1
         }
     }
     var result string
