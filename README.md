@@ -1,4 +1,11 @@
+
+
 # VerIt
+
+**work in progress**
+
+## Usage
+
 ```
 $ git init && echo "hello" > README.md && git add . && git commit -m "initial commit"
 $ verit 0.x.0
