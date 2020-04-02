@@ -10,30 +10,29 @@ const positionMajor = 0
 const positionMinor = 1
 const positionPatch = 2
 
-func Next(current string, incrementPattern string) (string, error) {
+func Next(current string, patternNext string) (string, error) {
     currentVersion, err := semver.StrictNewVersion(current)
     if err != nil {
         return "", err
     }
-    // Also, check if incrementPattern was a valid semver version if "x"s were numbers
-    incrementPatternWithoutXs := strings.ReplaceAll(incrementPattern, "x", "0")
-    incrementVersion, err := semver.StrictNewVersion(incrementPatternWithoutXs)
+    // check if patternNext was a valid semver version if "x"s were numbers
+    versionNext, err := semver.StrictNewVersion(strings.ReplaceAll(patternNext, "x", "0"))
     if err != nil {
         return "", err
     }
 
     // only need to consider major.minor.patch (="version core")
-    versionCore := incrementPattern
-    var versionExtension string
-    if indexExtension := strings.IndexAny(incrementPattern, "+-"); indexExtension != -1 {
-        versionCore = incrementPattern[:indexExtension]
-        versionExtension = incrementPattern[indexExtension:]
+    patternNextCore := patternNext
+    var patternNextExtension string
+    if indexExtension := strings.IndexAny(patternNext, "+-"); indexExtension != -1 {
+        patternNextCore = patternNext[:indexExtension]
+        patternNextExtension = patternNext[indexExtension:]
     }
 
-    // ensure there is at most one x and determine its index
+    // ensure there is at most one x and determine its position
     positionX := -1
     var countX int
-    for i, s := range strings.Split(versionCore, ".") {
+    for i, s := range strings.Split(patternNextCore, ".") {
         if s == "x" {
             positionX = i
             countX++
@@ -44,28 +43,28 @@ func Next(current string, incrementPattern string) (string, error) {
     }
 
     // set and maybe increment new version
-    nextMajor := incrementVersion.Major()
-    nextMinor := incrementVersion.Minor()
-    nextPatch := incrementVersion.Patch()
+    nextMajor := versionNext.Major()
+    nextMinor := versionNext.Minor()
+    nextPatch := versionNext.Patch()
 
     switch positionX {
     case positionMajor:
-        if currentVersion.Minor() == incrementVersion.Minor() && currentVersion.Patch() == incrementVersion.Patch() {
+        if currentVersion.Minor() == versionNext.Minor() && currentVersion.Patch() == versionNext.Patch() {
             nextMajor = currentVersion.Major() + 1
         }
     case positionMinor:
-        if currentVersion.Major() == incrementVersion.Major() && currentVersion.Patch() == incrementVersion.Patch() {
+        if currentVersion.Major() == versionNext.Major() && currentVersion.Patch() == versionNext.Patch() {
             nextMinor = currentVersion.Minor() + 1
         }
     case positionPatch:
-        if currentVersion.Major() == incrementVersion.Major() && currentVersion.Minor() == incrementVersion.Minor() {
+        if currentVersion.Major() == versionNext.Major() && currentVersion.Minor() == versionNext.Minor() {
             nextPatch = currentVersion.Patch() + 1
         }
     }
     var result string
-    newVersion, err := semver.StrictNewVersion(fmt.Sprintf("%v.%v.%v%v", nextMajor, nextMinor, nextPatch, versionExtension))
+    nextVersion, err := semver.StrictNewVersion(fmt.Sprintf("%v.%v.%v%v", nextMajor, nextMinor, nextPatch, patternNextExtension))
     if err == nil {
-        result = newVersion.String()
+        result = nextVersion.String()
     }
     return result, err
 }
