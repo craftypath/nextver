@@ -21,13 +21,7 @@ func Next(current string, patternNext string) (string, error) {
         return "", err
     }
 
-    // only need to consider major.minor.patch (="version core")
-    patternNextCore := patternNext
-    var patternNextExtension string
-    if indexExtension := strings.IndexAny(patternNext, "+-"); indexExtension != -1 {
-        patternNextCore = patternNext[:indexExtension]
-        patternNextExtension = patternNext[indexExtension:]
-    }
+    patternNextCore, patternNextExtension := splitVersionExtension(patternNext)
 
     // set and maybe increment new version
     nextMajor := versionNext.Major()
@@ -64,6 +58,16 @@ func Next(current string, patternNext string) (string, error) {
         result = nextVersion.String()
     }
     return result, err
+}
+
+func splitVersionExtension(version string) (string, string) {
+    versionCore := version
+    var versionExtension string
+    if indexExtension := strings.IndexAny(version, "+-"); indexExtension != -1 {
+        versionCore = version[:indexExtension]
+        versionExtension = version[indexExtension:]
+    }
+    return versionCore, versionExtension
 }
 
 func findX(patternNextCore string) (int, error) {
