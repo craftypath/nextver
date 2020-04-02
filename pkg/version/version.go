@@ -44,6 +44,8 @@ func Next(current string, patternNext string) (string, error) {
     return fmt.Sprintf("%v.%v.%v%v", nextMajor, nextMinor, nextPatch, nextExtension), nil
 }
 
+// returns major, minor, patch and the extension of a version
+// If major, minor, or patch are "x", 0 is returned instead
 func components(version string) (int, int, int, string, error) {
     core, extension := getCoreAndExtension(version)
     core = strings.ReplaceAll(core, "x", "0")
