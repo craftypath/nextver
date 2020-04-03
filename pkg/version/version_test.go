@@ -213,6 +213,33 @@ func TestNext(t *testing.T) {
             want:    "",
             wantErr: true,
         },
+        {
+            name: "support v prefix",
+            args: args{
+                current:          "v1.0.0",
+                incrementPattern: "v1.x.0",
+            },
+            want:    "v1.1.0",
+            wantErr: false,
+        },
+        {
+            name: "add v prefix",
+            args: args{
+                current:          "1.0.0",
+                incrementPattern: "v1.x.0",
+            },
+            want:    "v1.1.0",
+            wantErr: false,
+        },
+        {
+            name: "remove v prefix",
+            args: args{
+                current:          "v1.0.0",
+                incrementPattern: "1.x.0",
+            },
+            want:    "1.1.0",
+            wantErr: false,
+        },
     }
     for _, tt := range tests {
         t.Run(tt.name, func(t *testing.T) {
