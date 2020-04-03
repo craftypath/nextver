@@ -1,4 +1,4 @@
-module verit
+module nextver
 
 go 1.14
 
