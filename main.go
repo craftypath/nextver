@@ -1,9 +1,10 @@
 package main
 
 import (
-    "fmt"
-    "nextver/pkg/version"
-    "os"
+	"fmt"
+	"os"
+
+	"github.com/craftypath/nextver/pkg/version"
 )
 
 const usage = `Usage: nextver <current-version> <pattern>
@@ -15,18 +16,18 @@ Example: nextver 1.0.0 1.x.0 # prints 1.1.0
 `
 
 func main() {
-    args := os.Args[1:]
-    if len(args) != 2 {
-        exitWithMessage(usage)
-    }
-    next, err := version.Next(args[0], args[1])
-    if err != nil {
-        exitWithMessage(usage)
-    }
-    fmt.Println(next)
+	args := os.Args[1:]
+	if len(args) != 2 {
+		exitWithMessage(usage)
+	}
+	next, err := version.Next(args[0], args[1])
+	if err != nil {
+		exitWithMessage(usage)
+	}
+	fmt.Println(next)
 }
 
 func exitWithMessage(message string) {
-    _, _ = os.Stderr.WriteString(message)
-    os.Exit(1)
+	_, _ = os.Stderr.WriteString(message)
+	os.Exit(1)
 }

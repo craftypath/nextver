@@ -3,13 +3,13 @@
 package main
 
 import (
-    "github.com/magefile/mage/sh"
+	"github.com/magefile/mage/sh"
 )
 
 func Build() error {
-    return sh.RunV("go", "build", "-o", "build/nextver", "main.go")
+	return sh.RunV("go", "build", "-o", "build/nextver", "main.go")
 }
 
 func Test() error {
-    return sh.RunV("go", "test", "./...")
+	return sh.RunV("go", "test", "./...")
 }
