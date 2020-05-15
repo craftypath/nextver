@@ -61,5 +61,5 @@ currentVersion=$(git describe --abbrev=0)
 nextVersion=$(nextver -c "$currentVersion" -p 0.x.0)
 git tag "$nextVersion"
 git push --tags
-# ... use $version, e.g. to tag a docker image.
+# ... use $nextVersion, e.g. to tag a docker image.
 ```
