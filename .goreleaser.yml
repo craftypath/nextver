@@ -1,0 +1,42 @@
+before:
+  hooks:
+    - go mod download
+builds:
+  - main: main.go
+    binary: nextver
+    env:
+      - CGO_ENABLED=0
+    goarch:
+      - amd64
+    goos:
+      - linux
+      - darwin
+      - windows
+    ldflags:
+      - >-
+        -X github.com/craftypath/nextver/cmd/nextver.Version={{ .Tag }}
+        -X github.com/craftypath/nextver/cmd/nextver.GitCommit={{ .Commit }}
+        -X github.com/craftypath/nextver/cmd/nextver.BuildDate={{ .Date }}
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  name_template: "{{ .Tag }}-next"
+archives:
+  - format_overrides:
+      - goos: windows
+        format: zip
+    files:
+      - LICENSE
+      - README.md
+brews:
+  - github:
+      owner: craftypath
+      name: homebrew-tap
+    commit_author:
+      name: craftypath-ci-bot
+      email: craftypath-ci-bot@users.noreply.github.com
+    folder: Formula
+    homepage:  https://github.com/craftypath/nextver/
+    description: Automatic semver versioning
+    test: |
+      system "#{bin}/nextver --version"
