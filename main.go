@@ -1,33 +1,21 @@
+// Copyright The nextver Authors
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package main
 
-import (
-	"fmt"
-	"os"
-
-	"github.com/craftypath/nextver/pkg/version"
-)
-
-const usage = `Usage: nextver <current-version> <pattern>
-
-Example: nextver 1.0.0 1.x.0 # prints 1.1.0
-
-<current-version>: SemVer denoting the current version of your artifact
-<pattern>: SemVer denoting the next version of your artifact. One of <major>.<minor>.<patch> may be set to "x" to increment from current-version.
-`
+import "github.com/craftypath/nextver/cmd/nextver"
 
 func main() {
-	args := os.Args[1:]
-	if len(args) != 2 {
-		exitWithMessage(usage)
-	}
-	next, err := version.Next(args[0], args[1])
-	if err != nil {
-		exitWithMessage(usage)
-	}
-	fmt.Println(next)
-}
-
-func exitWithMessage(message string) {
-	_, _ = os.Stderr.WriteString(message)
-	os.Exit(1)
+	nextver.Execute()
 }
