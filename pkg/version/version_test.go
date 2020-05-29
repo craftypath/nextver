@@ -50,7 +50,7 @@ func TestNext(t *testing.T) {
 		{
 			name: "increment major",
 			args: args{
-				current:          "0.0.0",
+				current:          "0.2.4",
 				incrementPattern: "x.0.0",
 			},
 			want:    "1.0.0",
@@ -208,6 +208,33 @@ func TestNext(t *testing.T) {
 			},
 			want:    "",
 			wantErr: true,
+		},
+		{
+			name: "bump major not knowing minor and patch",
+			args: args{
+				current:          "1.5.2",
+				incrementPattern: "x.?.?",
+			},
+			want:    "2.5.2",
+			wantErr: false,
+		},
+		{
+			name: "bump minor not knowing major and patch",
+			args: args{
+				current:          "1.5.2",
+				incrementPattern: "?.x.?",
+			},
+			want:    "1.6.2",
+			wantErr: false,
+		},
+		{
+			name: "bump patch not knowing major and minor",
+			args: args{
+				current:          "1.5.2",
+				incrementPattern: "?.?.x",
+			},
+			want:    "1.5.3",
+			wantErr: false,
 		},
 		{
 			name: "minor neither a number nor x",
