@@ -15,7 +15,7 @@ nextver -c 0.1.0 -p 0.x.0 # prints 0.2.0
 - in case you don't know / care about higher position versions, use `?` to keep their current value:
 
 ```
-nextver -c 1.2.0 -p ?.x.0 # prints 1.3.0
+nextver -c 1.2.0 -p '?.x.0' # prints 1.3.0
 ```
 
 - bump versions explicitly, with the auto-increment being reset to `0`:
