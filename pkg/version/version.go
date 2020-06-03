@@ -24,13 +24,15 @@ const positionMajor = 0
 const positionMinor = 1
 const positionPatch = 2
 
+const (
+	Patch = positionPatch
+	Minor = positionMinor
+	Major = positionMajor
+)
+
 func Next(current string, patternNext string) (string, error) {
 	_, current = splitPrefix("v", current)
 	currentCore, _ := coreAndExtension(current)
-	currentMajor, currentMinor, currentPatch, err := majorMinorPatch(currentCore)
-	if err != nil {
-		return "", err
-	}
 
 	nextPrefix, patternNext := splitPrefix("v", patternNext)
 	nextCore, nextExtension := coreAndExtension(patternNext)
@@ -40,19 +42,32 @@ func Next(current string, patternNext string) (string, error) {
 		return "", err
 	}
 
-	nextCore = strings.ReplaceAll(nextCore, "x", "0")
-	nextMajor, nextMinor, nextPatch, err := majorMinorPatch(nextCore)
+	currentMajorMinorPatchList, err := majorMinorPatchList(currentCore)
+	if err != nil {
+		return "", err
+	}
+	nextMajorMinorPatchList, err := majorMinorPatchList(nextCore)
+	if err != nil {
+		return "", err
+	}
+	nextMajorMinorPatchList, err = findAndReplaceQuestionMarksAndXs(nextMajorMinorPatchList, currentMajorMinorPatchList)
+	if err != nil {
+		return "", err
+	}
+	currentMajor, currentMinor, currentPatch, err := majorMinorPatchListToInt(currentMajorMinorPatchList)
+	if err != nil {
+		return "", err
+	}
+	nextMajor, nextMinor, nextPatch, err := majorMinorPatchListToInt(nextMajorMinorPatchList)
 	if err != nil {
 		return "", err
 	}
 
 	switch positionX {
 	case positionMajor:
-		if currentMinor == nextMinor && currentPatch == nextPatch {
-			nextMajor = currentMajor + 1
-		}
+		nextMajor = currentMajor + 1
 	case positionMinor:
-		if currentMajor == nextMajor && currentPatch == nextPatch {
+		if currentMajor == nextMajor {
 			nextMinor = currentMinor + 1
 		}
 	case positionPatch:
@@ -64,20 +79,35 @@ func Next(current string, patternNext string) (string, error) {
 	return fmt.Sprintf("%v%v.%v.%v%v", nextPrefix, nextMajor, nextMinor, nextPatch, nextExtension), nil
 }
 
-func majorMinorPatch(versionCore string) (int, int, int, error) {
+func findAndReplaceQuestionMarksAndXs(nextCore []string, currentCore []string) ([]string, error) {
+	for i := 0; i < 3; i++ {
+		if nextCore[i] == "?" {
+			nextCore[i] = currentCore[i]
+		} else if nextCore[i] == "x" {
+			nextCore[i] = "0"
+		}
+	}
+	return nextCore, nil
+}
+
+func majorMinorPatchList(versionCore string) ([]string, error) {
 	split := strings.Split(versionCore, ".")
 	if len(split) != 3 {
-		return 0, 0, 0, fmt.Errorf("version must be <major>.<minor>.<patch>, got %v", versionCore)
+		return split, fmt.Errorf("version must be <major>.<minor>.<patch>, got %v", versionCore)
 	}
-	major, err := strconv.Atoi(split[0])
+	return split, nil
+}
+
+func majorMinorPatchListToInt(versionCore []string) (int, int, int, error) {
+	major, err := strconv.Atoi(versionCore[0])
 	if err != nil {
 		return 0, 0, 0, err
 	}
-	minor, err := strconv.Atoi(split[1])
+	minor, err := strconv.Atoi(versionCore[1])
 	if err != nil {
 		return 0, 0, 0, err
 	}
-	patch, err := strconv.Atoi(split[2])
+	patch, err := strconv.Atoi(versionCore[2])
 	if err != nil {
 		return 0, 0, 0, err
 	}
