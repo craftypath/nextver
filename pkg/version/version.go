@@ -24,12 +24,6 @@ const positionMajor = 0
 const positionMinor = 1
 const positionPatch = 2
 
-const (
-	Patch = positionPatch
-	Minor = positionMinor
-	Major = positionMajor
-)
-
 func Next(current string, patternNext string) (string, error) {
 	_, current = splitPrefix("v", current)
 	currentCore, _ := coreAndExtension(current)
