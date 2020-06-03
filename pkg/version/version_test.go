@@ -222,7 +222,7 @@ func TestNext(t *testing.T) {
 			name: "bump minor not knowing major and patch",
 			args: args{
 				current:          "1.5.2",
-				incrementPattern: "?.x.?",
+				incrementPattern: "?.x.0",
 			},
 			want:    "1.6.0",
 			wantErr: false,
