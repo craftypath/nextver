@@ -215,7 +215,7 @@ func TestNext(t *testing.T) {
 				current:          "1.5.2",
 				incrementPattern: "x.?.?",
 			},
-			want:    "2.5.2",
+			want:    "2.0.0",
 			wantErr: false,
 		},
 		{
