@@ -210,7 +210,7 @@ func TestNext(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name: "bump major not knowing minor and patch",
+			name: "increment major with minor and patch set",
 			args: args{
 				current:          "1.5.2",
 				incrementPattern: "x.0.0",
@@ -219,7 +219,7 @@ func TestNext(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "bump minor not knowing major and patch",
+			name: "increment minor not knowing major and patch",
 			args: args{
 				current:          "1.5.2",
 				incrementPattern: "?.x.0",
@@ -228,7 +228,7 @@ func TestNext(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "bump patch not knowing major and minor",
+			name: "increment patch not knowing major and minor",
 			args: args{
 				current:          "1.5.2",
 				incrementPattern: "?.?.x",
