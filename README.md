@@ -1,7 +1,5 @@
 # nextver
 
-**work in progress**
-
 ## Features
 
 - auto-increments major, minor, or patch version when set to `x`:
