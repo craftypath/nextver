@@ -71,7 +71,9 @@ func Next(current string, patternNext string) (string, error) {
 	case positionPatch:
 		if currentMajor == nextMajor && currentMinor == nextMinor {
 			nextPatch = currentPatch + 1
-		} else if currentMajor > nextMajor || currentMinor > nextMinor {
+		} else if currentMajor > nextMajor {
+			return "", versionDecreaseError
+		} else if currentMajor == nextMajor && currentMinor > nextMinor {
 			return "", versionDecreaseError
 		}
 	}
