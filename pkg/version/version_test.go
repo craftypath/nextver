@@ -219,6 +219,33 @@ func TestNext(t *testing.T) {
 			wantErr: false,
 		},
 		{
+			name: "reject decreasing major version when incrementing minor version",
+			args: args{
+				current:          "1.2.3",
+				incrementPattern: "0.x.0",
+			},
+			want:    "",
+			wantErr: true,
+		},
+		{
+			name: "reject decreasing major version when incrementing patch version",
+			args: args{
+				current:          "1.2.3",
+				incrementPattern: "0.2.x",
+			},
+			want:    "",
+			wantErr: true,
+		},
+		{
+			name: "reject decreasing minor version when incrementing patch version",
+			args: args{
+				current:          "1.2.3",
+				incrementPattern: "1.0.x",
+			},
+			want:    "",
+			wantErr: true,
+		},
+		{
 			name: "increment minor not knowing major and patch",
 			args: args{
 				current:          "1.5.2",

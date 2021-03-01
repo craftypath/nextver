@@ -24,6 +24,8 @@ const positionMajor = 0
 const positionMinor = 1
 const positionPatch = 2
 
+var versionDecreaseError = fmt.Errorf("version decrease in combination with auto increment is not supported")
+
 func Next(current string, patternNext string) (string, error) {
 	_, current = splitPrefix("v", current)
 	currentCore, _ := coreAndExtension(current)
@@ -63,10 +65,16 @@ func Next(current string, patternNext string) (string, error) {
 	case positionMinor:
 		if currentMajor == nextMajor {
 			nextMinor = currentMinor + 1
+		} else if currentMajor > nextMajor {
+			return "", versionDecreaseError
 		}
 	case positionPatch:
 		if currentMajor == nextMajor && currentMinor == nextMinor {
 			nextPatch = currentPatch + 1
+		} else if currentMajor > nextMajor {
+			return "", versionDecreaseError
+		} else if currentMinor > nextMinor {
+			return "", versionDecreaseError
 		}
 	}
 
