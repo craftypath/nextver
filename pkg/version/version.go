@@ -24,16 +24,20 @@ const positionMajor = 0
 const positionMinor = 1
 const positionPatch = 2
 
+const incrementChar = "x"
+const wildcardChar = "?"
+const vPrefix = "v"
+
 var versionDecreaseError = fmt.Errorf("version decrease in combination with auto increment is not supported")
 
 func Next(current string, patternNext string) (string, error) {
-	_, current = splitPrefix("v", current)
+	_, current = splitPrefix(vPrefix, current)
 	currentCore, _ := coreAndExtension(current)
 
-	nextPrefix, patternNext := splitPrefix("v", patternNext)
+	nextPrefix, patternNext := splitPrefix(vPrefix, patternNext)
 	nextCore, nextExtension := coreAndExtension(patternNext)
 
-	positionX, err := findX(nextCore)
+	positionIncrement, err := findIncrementChar(nextCore)
 	if err != nil {
 		return "", err
 	}
@@ -46,7 +50,7 @@ func Next(current string, patternNext string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	nextMajorMinorPatchList, err = findAndReplaceQuestionMarksAndXs(nextMajorMinorPatchList, currentMajorMinorPatchList)
+	nextMajorMinorPatchList, err = replaceWildcardsAndIncrements(nextMajorMinorPatchList, currentMajorMinorPatchList)
 	if err != nil {
 		return "", err
 	}
@@ -59,7 +63,7 @@ func Next(current string, patternNext string) (string, error) {
 		return "", err
 	}
 
-	switch positionX {
+	switch positionIncrement {
 	case positionMajor:
 		nextMajor = currentMajor + 1
 	case positionMinor:
@@ -81,11 +85,11 @@ func Next(current string, patternNext string) (string, error) {
 	return fmt.Sprintf("%v%v.%v.%v%v", nextPrefix, nextMajor, nextMinor, nextPatch, nextExtension), nil
 }
 
-func findAndReplaceQuestionMarksAndXs(nextCore []string, currentCore []string) ([]string, error) {
+func replaceWildcardsAndIncrements(nextCore []string, currentCore []string) ([]string, error) {
 	for i := 0; i < 3; i++ {
-		if nextCore[i] == "?" {
+		if nextCore[i] == wildcardChar {
 			nextCore[i] = currentCore[i]
-		} else if nextCore[i] == "x" {
+		} else if nextCore[i] == incrementChar {
 			nextCore[i] = "0"
 		}
 	}
@@ -101,15 +105,15 @@ func majorMinorPatchList(versionCore string) ([]string, error) {
 }
 
 func majorMinorPatchListToInt(versionCore []string) (int, int, int, error) {
-	major, err := strconv.Atoi(versionCore[0])
+	major, err := strconv.Atoi(versionCore[positionMajor])
 	if err != nil {
 		return 0, 0, 0, err
 	}
-	minor, err := strconv.Atoi(versionCore[1])
+	minor, err := strconv.Atoi(versionCore[positionMinor])
 	if err != nil {
 		return 0, 0, 0, err
 	}
-	patch, err := strconv.Atoi(versionCore[2])
+	patch, err := strconv.Atoi(versionCore[positionPatch])
 	if err != nil {
 		return 0, 0, 0, err
 	}
@@ -117,31 +121,29 @@ func majorMinorPatchListToInt(versionCore []string) (int, int, int, error) {
 }
 
 func splitPrefix(prefix string, str string) (string, string) {
-	var foundPrefix string
-	if strings.HasPrefix(str, prefix) {
-		str = str[len(prefix):]
-		foundPrefix = prefix
+	if !strings.HasPrefix(str, prefix) {
+		return "", str
 	}
-	return foundPrefix, str
+	return prefix, str[len(prefix):]
 }
 
-// returns 0 if major is x
-// returns 1 if minor is x
-// returns 2 if patch is x
-// returns an error if there is more than one x in major, minor, and patch combined
-func findX(versionCore string) (int, error) {
-	positionX := -1
-	var countX int
+// Returns 0 if major is incrementChar
+// Returns 1 if minor is incrementChar
+// Returns 2 if patch is incrementChar
+// Returns an error if there is more than one incrementChar in major, minor, and patch combined
+func findIncrementChar(versionCore string) (int, error) {
+	positionIncrement := -1
+	var countIncrement int
 	for i, s := range strings.Split(versionCore, ".") {
-		if s == "x" {
-			positionX = i
-			countX++
+		if s == incrementChar {
+			positionIncrement = i
+			countIncrement++
 		}
-		if countX > 1 {
-			return 0, fmt.Errorf("only one x allowed")
+		if countIncrement > 1 {
+			return 0, fmt.Errorf("only one %s allowed", incrementChar)
 		}
 	}
-	return positionX, nil
+	return positionIncrement, nil
 }
 
 func coreAndExtension(version string) (string, string) {
