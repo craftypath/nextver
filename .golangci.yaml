@@ -1,0 +1,29 @@
+run:
+  allow-parallel-runners: true
+  skip-files:
+    - debug.go
+    - mock_.*\.go
+    - magefile_test\.go
+    - _scratch/.*\.go
+
+linter-settings:
+  misspell:
+    locale: US
+
+linters:
+  disable-all: true
+  enable:
+    - deadcode
+    - errcheck
+    - gofmt
+    - goimports
+    - gosimple
+    - govet
+    - ineffassign
+    - misspell
+    - staticcheck
+    - structcheck
+    - typecheck
+    - unused
+    - varcheck
+    - revive

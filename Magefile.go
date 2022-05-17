@@ -13,6 +13,7 @@
 // limitations under the License.
 
 //go:build mage
+// +build mage
 
 package main
 
@@ -33,12 +34,6 @@ func Lint() error {
 		return err
 	}
 	if err := sh.RunV("golangci-lint", "run"); err != nil {
-		return err
-	}
-	if err := sh.RunV("go", "vet", "-v", "./..."); err != nil {
-		return err
-	}
-	if err := sh.RunV("goimports", "-w", "-l", "."); err != nil {
 		return err
 	}
 	if err := sh.RunV("go", "mod", "tidy"); err != nil {
