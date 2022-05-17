@@ -7,5 +7,5 @@ require (
 	github.com/goreleaser/goreleaser v0.179.0
 	github.com/magefile/mage v1.11.0
 	github.com/spf13/cobra v1.4.0
-	golang.org/x/tools v0.1.5
+	golang.org/x/tools v0.1.10
 )
