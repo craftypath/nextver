@@ -28,7 +28,7 @@ const incrementChar = "x"
 const wildcardChar = "?"
 const vPrefix = "v"
 
-var versionDecreaseError = fmt.Errorf("version decrease in combination with auto increment is not supported")
+var errVersionDecrease = fmt.Errorf("version decrease in combination with auto increment is not supported")
 
 func Next(current string, patternNext string) (string, error) {
 	_, current = splitPrefix(vPrefix, current)
@@ -70,15 +70,15 @@ func Next(current string, patternNext string) (string, error) {
 		if currentMajor == nextMajor {
 			nextMinor = currentMinor + 1
 		} else if currentMajor > nextMajor {
-			return "", versionDecreaseError
+			return "", errVersionDecrease
 		}
 	case positionPatch:
 		if currentMajor == nextMajor && currentMinor == nextMinor {
 			nextPatch = currentPatch + 1
 		} else if currentMajor > nextMajor {
-			return "", versionDecreaseError
+			return "", errVersionDecrease
 		} else if currentMajor == nextMajor && currentMinor > nextMinor {
-			return "", versionDecreaseError
+			return "", errVersionDecrease
 		}
 	}
 
