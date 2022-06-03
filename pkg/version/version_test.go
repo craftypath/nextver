@@ -39,6 +39,24 @@ func TestNext(t *testing.T) {
 			wantErr: true,
 		},
 		{
+			name: "reject empty string",
+			args: args{
+				current:          "",
+				incrementPattern: "",
+			},
+			want:    "",
+			wantErr: true,
+		},
+		{
+			name: "reject blank string",
+			args: args{
+				current:          " ",
+				incrementPattern: " ",
+			},
+			want:    "",
+			wantErr: true,
+		},
+		{
 			name: "reject non semver increment",
 			args: args{
 				current:          "0.0.0",
