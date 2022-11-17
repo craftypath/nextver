@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/golangci/golangci-lint v1.46.1
 	github.com/goreleaser/goreleaser v1.8.3
-	github.com/magefile/mage v1.13.0
+	github.com/magefile/mage v1.14.0
 	github.com/spf13/cobra v1.5.0
 	golang.org/x/tools v0.1.11-0.20220316014157-77aa08bb151a
 )
