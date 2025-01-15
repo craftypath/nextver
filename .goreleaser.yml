@@ -1,3 +1,4 @@
+version: 2
 before:
   hooks:
     - go mod download
@@ -8,6 +9,7 @@ builds:
       - CGO_ENABLED=0
     goarch:
       - amd64
+      - arm64
     goos:
       - linux
       - darwin
@@ -18,9 +20,9 @@ builds:
         -X github.com/craftypath/nextver/cmd/nextver.GitCommit={{ .Commit }}
         -X github.com/craftypath/nextver/cmd/nextver.BuildDate={{ .Date }}
 checksum:
-  name_template: 'checksums.txt'
+  name_template: "checksums.txt"
 snapshot:
-  name_template: "{{ .Tag }}-next"
+  version_template: "{{ .Tag }}-next"
 archives:
   - format_overrides:
       - goos: windows
@@ -29,14 +31,14 @@ archives:
       - LICENSE
       - README.md
 brews:
-  - tap:
+  - repository:
       owner: craftypath
       name: homebrew-tap
     commit_author:
       name: craftypath-ci-bot
       email: craftypath-ci-bot@users.noreply.github.com
-    folder: Formula
-    homepage:  https://github.com/craftypath/nextver/
+    directory: Formula
+    homepage: https://github.com/craftypath/nextver/
     description: Automatic semver versioning
     test: |
       system "#{bin}/nextver --version"
