@@ -53,7 +53,7 @@ func newNextverCommand() *cobra.Command {
 		Use:     "nextver [flags]",
 		Short:   "nextver manages automatic semver versioning",
 		Version: fullVersion,
-		RunE: func(command *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			next, err := version.Next(currentVersion, pattern)
 			if err != nil {
 				return err

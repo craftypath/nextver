@@ -30,10 +30,10 @@ import (
 )
 
 func Lint() error {
-	if err := sh.RunV("bash", "-c", "shopt -s globstar; shellcheck **/*.sh"); err != nil {
+	if err := sh.RunV("go", "tool", "revive", "-config", ".revive.toml", "-formatter", "friendly", "./..."); err != nil {
 		return err
 	}
-	if err := sh.RunV("golangci-lint", "run"); err != nil {
+	if err := sh.RunV("go", "tool", "goimports", "-w", "-l", "."); err != nil {
 		return err
 	}
 	if err := sh.RunV("go", "mod", "tidy"); err != nil {
@@ -102,10 +102,10 @@ func Test() error {
 }
 
 func Build() error {
-	return sh.RunV("goreleaser", "release", "--snapshot", "--clean")
+	return sh.RunV("go", "tool", "goreleaser", "build", "--clean", "--snapshot")
 }
 
 func Release() error {
 	mg.Deps(Test)
-	return sh.RunV("goreleaser", "release", "--clean")
+	return sh.RunV("go", "tool", "goreleaser", "release", "--clean")
 }
