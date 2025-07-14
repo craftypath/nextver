@@ -1,7 +1,5 @@
 version: 2
-before:
-  hooks:
-    - go mod download
+
 builds:
   - main: main.go
     binary: nextver
@@ -22,11 +20,12 @@ builds:
 checksum:
   name_template: "checksums.txt"
 snapshot:
-  version_template: "{{ .Tag }}-next"
+  name_template: "{{ .Tag }}-next"
 archives:
   - format_overrides:
       - goos: windows
-        format: zip
+        formats:
+          - zip
     files:
       - LICENSE
       - README.md
@@ -34,6 +33,7 @@ brews:
   - repository:
       owner: craftypath
       name: homebrew-tap
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
     commit_author:
       name: craftypath-ci-bot
       email: craftypath-ci-bot@users.noreply.github.com
