@@ -18,7 +18,12 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: 1.23
+          go-version: 1.24
+
+      - name: Install Mage
+        uses: magefile/mage-action@v3
+        with:
+          install-only: true
 
       - uses: actions/cache@v4
         with:
@@ -26,11 +31,6 @@ jobs:
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-
-
-      - name: Install tools
-        run: |
-          ./setup.sh
-          echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
 
       - name: Check License Headers
         run: mage -v checkLicenseHeaders

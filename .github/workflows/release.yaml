@@ -19,10 +19,15 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup go
+      - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: 1.23
+          go-version: 1.24
+
+      - name: Install Mage
+        uses: magefile/mage-action@v3
+        with:
+          install-only: true
 
       - uses: actions/cache@v4
         with:
@@ -30,11 +35,6 @@ jobs:
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-
-
-      - name: Install tools
-        run: |
-          ./setup.sh
-          echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
 
       - name: Tag
         run: |
@@ -53,4 +53,5 @@ jobs:
           echo "Building release ${{ github.event.inputs.version }}"
           mage -v release
         env:
-          GITHUB_TOKEN: "${{ secrets.CI_TOKEN }}"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HOMEBREW_TAP_GITHUB_TOKEN: ${{ secrets.CI_TOKEN }}
